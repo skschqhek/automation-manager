@@ -1,0 +1,7 @@
+config.json
+*.state
+reaction-vote-message.json
+*.log
+logs/
+*.pid
+.curseforge-server.pid

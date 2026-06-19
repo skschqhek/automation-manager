@@ -1,0 +1,11 @@
+{
+  "WebhookUrl": "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN",
+  "Message": "서버가 곧 열립니다.",
+  "SendTime": "13:50",
+  "TaskName": "Discord Scheduled Message",
+  "ServerStartTaskName": "OneButton Minecraft Server Start",
+  "ServerStartTaskNames": [
+    "OneButton Minecraft Server Start",
+    "CurseForge Server Start"
+  ]
+}

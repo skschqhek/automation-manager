@@ -1,0 +1,16 @@
+{
+  "ServerDir": "{Desktop}\\Im,dal,da,hyun Sunlit-Valley-4.0.9",
+  "StartCommand": ".\\run.bat",
+  "StartTime": "14:00",
+  "StopTime": "06:00",
+  "WarningMinutes": [10, 5, 3, 2, 1],
+  "RconHost": "127.0.0.1",
+  "RconPort": 25575,
+  "RconPassword": "CHANGE_ME",
+  "WarningMessageTemplate": "[서버공지] 서버가 {minutes}분 후 자동 종료됩니다. 안전한 곳에서 접속을 마무리해주세요.",
+  "StopNowMessage": "[서버공지] 서버가 지금 자동 종료됩니다.",
+  "StopCommand": "stop",
+  "ForceKillAfterSeconds": 120,
+  "PidFile": ".curseforge-server.pid",
+  "LogFile": "logs\\automation.log"
+}
