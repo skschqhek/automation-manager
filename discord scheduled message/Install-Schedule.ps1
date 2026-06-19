@@ -7,21 +7,37 @@ if (-not (Test-Path $configPath)) {
 
 $config = Get-Content $configPath -Raw -Encoding UTF8 | ConvertFrom-Json
 
-if (-not $config.SendTime) {
-  throw "SendTime is empty in config.json."
-}
-
 $taskName = $config.TaskName
 if (-not $taskName) {
   $taskName = "Discord Scheduled Message"
 }
 
-$parts = $config.SendTime.Split(":")
-if ($parts.Count -ne 2) {
-  throw "SendTime must be HH:mm, for example 13:50."
+$noticeMinutesBeforeStart = 10
+if ($config.NoticeMinutesBeforeStart) {
+  $noticeMinutesBeforeStart = [int]$config.NoticeMinutesBeforeStart
+}
+if ($noticeMinutesBeforeStart -lt 1) {
+  throw "NoticeMinutesBeforeStart must be 1 or higher."
 }
 
-$at = (Get-Date).Date.AddHours([int]$parts[0]).AddMinutes([int]$parts[1])
+$managerDir = Split-Path $PSScriptRoot -Parent
+$minecraftConfigPath = Join-Path $managerDir "curseforge-server-automation\config.json"
+if (-not (Test-Path $minecraftConfigPath)) {
+  throw "Minecraft config.json not found: $minecraftConfigPath"
+}
+
+$minecraftConfig = Get-Content $minecraftConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+if (-not $minecraftConfig.StartTime) {
+  throw "StartTime is empty in Minecraft config.json."
+}
+
+$parts = ([string]$minecraftConfig.StartTime).Split(":")
+if ($parts.Count -ne 2) {
+  throw "Minecraft StartTime must be HH:mm, for example 14:00."
+}
+
+$serverStartAt = (Get-Date).Date.AddHours([int]$parts[0]).AddMinutes([int]$parts[1])
+$at = $serverStartAt.AddMinutes(-1 * $noticeMinutesBeforeStart)
 $powershell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
 $sendScript = Join-Path $PSScriptRoot "Send-DiscordMessage.ps1"
 
@@ -46,5 +62,5 @@ Register-ScheduledTask `
 
 Write-Host "Schedule installed." -ForegroundColor Green
 Write-Host "Task name: $taskName"
-Write-Host "Send time: $($config.SendTime)"
-
+Write-Host "Minecraft start time: $($minecraftConfig.StartTime)"
+Write-Host "Discord notice time: $($at.ToString('HH:mm')) ($noticeMinutesBeforeStart minutes before server start)"

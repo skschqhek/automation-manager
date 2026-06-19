@@ -19,7 +19,10 @@ if (-not $config.Message) {
   throw "Message is empty in config.json."
 }
 
-$today = (Get-Date).Date
+$noticeMinutesBeforeStart = 10
+if ($config.NoticeMinutesBeforeStart) {
+  $noticeMinutesBeforeStart = [int]$config.NoticeMinutesBeforeStart
+}
 $serverStartTaskNames = New-Object System.Collections.Generic.List[string]
 if ($config.ServerStartTaskNames) {
   foreach ($name in $config.ServerStartTaskNames) {
@@ -37,6 +40,7 @@ foreach ($name in @("OneButton Minecraft Server Start", "CurseForge Server Start
   }
 }
 
+$now = Get-Date
 $matchedTaskInfo = $null
 $matchedTaskName = $null
 foreach ($taskName in $serverStartTaskNames) {
@@ -46,7 +50,14 @@ foreach ($taskName in $serverStartTaskNames) {
   }
 
   $serverTaskInfo = Get-ScheduledTaskInfo -TaskName $taskName -ErrorAction SilentlyContinue
-  if ($serverTaskInfo -and $serverTaskInfo.NextRunTime -and $serverTaskInfo.NextRunTime.Date -eq $today) {
+  if ($serverTaskInfo -and $serverTaskInfo.NextRunTime) {
+    $minutesUntilStart = ($serverTaskInfo.NextRunTime - $now).TotalMinutes
+  }
+  else {
+    continue
+  }
+
+  if ($minutesUntilStart -ge -5 -and $minutesUntilStart -le ($noticeMinutesBeforeStart + 5)) {
     $matchedTaskInfo = $serverTaskInfo
     $matchedTaskName = $taskName
     break

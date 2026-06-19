@@ -1,6 +1,6 @@
 # Discord Scheduled Message
 
-지정한 디스코드 채널에 정해진 시각마다 메시지를 보내는 PowerShell 스크립트입니다.
+마인크래프트 서버 시작 예약 시간 10분 전에 디스코드 메시지를 보내는 PowerShell 스크립트입니다.
 
 ## 1. 디스코드 Webhook 만들기
 
@@ -22,10 +22,18 @@
 {
   "WebhookUrl": "복사한 Webhook URL",
   "Message": "서버가 곧 열립니다.",
-  "SendTime": "13:50",
-  "TaskName": "Discord Scheduled Message"
+  "NoticeMinutesBeforeStart": 10,
+  "TaskName": "Discord Scheduled Message",
+  "ServerStartTaskNames": [
+    "OneButton Minecraft Server Start",
+    "CurseForge Server Start"
+  ]
 }
 ```
+
+전송 시각은 이 파일의 `SendTime`이 아니라 `curseforge-server-automation/config.json`의 `StartTime`을 기준으로 계산됩니다.
+
+예: 마인크래프트 `StartTime`이 `14:00`이고 `NoticeMinutesBeforeStart`가 `10`이면 디스코드 예약 메시지는 `13:50`에 등록됩니다.
 
 ## 3. 테스트 전송
 
@@ -39,7 +47,9 @@ powershell -ExecutionPolicy Bypass -File .\Test-DiscordMessage.ps1
 powershell -ExecutionPolicy Bypass -File .\Install-Schedule.ps1
 ```
 
-이후 매일 `SendTime`에 메시지가 전송됩니다.
+이후 매일 마인크래프트 서버 시작 시간 10분 전에 메시지 발송 여부를 확인합니다.
+
+실제 메시지는 서버 시작 예약 작업이 가까운 시간에 존재할 때만 전송됩니다.
 
 ## 5. 예약 제거
 

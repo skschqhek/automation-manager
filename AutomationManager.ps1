@@ -84,6 +84,29 @@ function Get-ConsoleLockSummary {
   return "절전 해제 후 암호 요구: 확인 불가"
 }
 
+function Get-DiscordNoticeSummary {
+  param($DiscordConfig, $MinecraftConfig)
+
+  $minutes = 10
+  if ($DiscordConfig -and $DiscordConfig.NoticeMinutesBeforeStart) {
+    $minutes = [int]$DiscordConfig.NoticeMinutesBeforeStart
+  }
+
+  if ($MinecraftConfig -and $MinecraftConfig.StartTime) {
+    try {
+      $parts = ([string]$MinecraftConfig.StartTime).Split(":")
+      if ($parts.Count -eq 2) {
+        $serverStart = (Get-Date).Date.AddHours([int]$parts[0]).AddMinutes([int]$parts[1])
+        $noticeAt = $serverStart.AddMinutes(-1 * $minutes)
+        return "서버 시작 $($MinecraftConfig.StartTime) 기준 $minutes분 전 ($($noticeAt.ToString('HH:mm')))"
+      }
+    }
+    catch {}
+  }
+
+  return "서버 시작 기준 $minutes분 전"
+}
+
 function New-Button {
   param([string]$Text, [int]$X, [int]$Y, [int]$W, [scriptblock]$OnClick)
   $button = New-Object System.Windows.Forms.Button
@@ -225,7 +248,7 @@ function Refresh-Status {
   if ($discordConfig) {
     $hasWebhook = $discordConfig.WebhookUrl -and $discordConfig.WebhookUrl -notlike "*WEBHOOK_ID*"
     $discordStatus.Text = "설정: 정상    Webhook: " + $(if ($hasWebhook) { "설정됨" } else { "미설정" })
-    $discordDetail.Text = "전송 시간 $($discordConfig.SendTime), 예약: $(Get-TaskSummary $discordConfig.TaskName)"
+    $discordDetail.Text = "$(Get-DiscordNoticeSummary $discordConfig $mcConfig), 예약: $(Get-TaskSummary $discordConfig.TaskName)"
   }
   else {
     $discordStatus.Text = "config.json이 없습니다. 설정 열기를 누르면 예시 파일로 생성합니다."
@@ -234,10 +257,10 @@ function Refresh-Status {
 
   $lines.Add("절전 해제 예약: $(Get-TaskSummary 'Wake PC At 13-50')")
   $lines.Add("원버튼 절전 해제: $(Get-TaskSummary 'OneButton Wake 13-50')")
-  $lines.Add("원버튼 디스코드: $(Get-TaskSummary 'OneButton Discord 13-55')")
+  $lines.Add("원버튼 디스코드: $(Get-TaskSummary 'OneButton Discord Notice')")
   $lines.Add("원버튼 서버 실행: $(Get-TaskSummary 'OneButton Minecraft Server Start')")
   $lines.Add("절전 해제 후 암호 설정: $(Get-ConsoleLockSummary)")
-  if ($discordConfig) { $lines.Add("디스코드 전송 시간: $($discordConfig.SendTime)") }
+  if ($discordConfig) { $lines.Add("디스코드 공지 시간: $(Get-DiscordNoticeSummary $discordConfig $mcConfig)") }
   else { $lines.Add("디스코드 설정: 없음") }
 
   $reactionConfigPath = Join-Path $paths.Reaction "config.json"

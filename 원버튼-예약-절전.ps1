@@ -5,12 +5,13 @@ $minecraftDir = Join-Path $PSScriptRoot "curseforge-server-automation"
 $discordDir = Join-Path $PSScriptRoot "discord scheduled message"
 
 $minecraftStartScript = Join-Path $minecraftDir "Start-CurseForgeServer.ps1"
+$minecraftConfigPath = Join-Path $minecraftDir "config.json"
 $discordSendScript = Join-Path $discordDir "Send-DiscordMessage.ps1"
 $discordConfigPath = Join-Path $discordDir "config.json"
 $discordExamplePath = Join-Path $discordDir "config.example.json"
 
 $wakeTaskName = "OneButton Wake 13-50"
-$discordTaskName = "OneButton Discord 13-55"
+$discordTaskName = "OneButton Discord Notice"
 $serverTaskName = "OneButton Minecraft Server Start"
 
 function Get-NextTimeTodayOrTomorrow {
@@ -71,7 +72,18 @@ function Register-OneTimeTask {
 Write-Host "=== 원버튼 예약 + 절전 ===" -ForegroundColor Cyan
 
 Assert-File $minecraftStartScript "마인크래프트 서버 시작"
+Assert-File $minecraftConfigPath "마인크래프트 서버 설정"
 Assert-File $discordSendScript "디스코드 발송"
+
+$minecraftConfig = Get-Content $minecraftConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+if (-not $minecraftConfig.StartTime) {
+  throw "마인크래프트 config.json의 StartTime이 비어 있습니다."
+}
+
+$serverTimeParts = ([string]$minecraftConfig.StartTime).Split(":")
+if ($serverTimeParts.Count -ne 2) {
+  throw "마인크래프트 StartTime은 HH:mm 형식이어야 합니다. 예: 14:00"
+}
 
 if (-not (Test-Path $discordConfigPath)) {
   if (Test-Path $discordExamplePath) {
@@ -98,11 +110,20 @@ if ($discordConfig.PSObject.Properties.Name -contains "ServerStartTaskName") {
 else {
   $discordConfig | Add-Member -NotePropertyName "ServerStartTaskName" -NotePropertyValue $serverTaskName
 }
+if ($discordConfig.PSObject.Properties.Name -contains "NoticeMinutesBeforeStart") {
+  $discordConfig.NoticeMinutesBeforeStart = 10
+}
+else {
+  $discordConfig | Add-Member -NotePropertyName "NoticeMinutesBeforeStart" -NotePropertyValue 10
+}
 $discordConfig | ConvertTo-Json -Depth 10 | Set-Content -Path $discordConfigPath -Encoding UTF8
 
 $wakeAt = Get-NextTimeTodayOrTomorrow -Hour 13 -Minute 50
-$discordAt = $wakeAt.Date.AddHours(13).AddMinutes(55)
-$serverAt = $wakeAt.Date.AddHours(14)
+$serverAt = $wakeAt.Date.AddHours([int]$serverTimeParts[0]).AddMinutes([int]$serverTimeParts[1])
+if ($serverAt -le $wakeAt) {
+  $serverAt = $serverAt.AddDays(1)
+}
+$discordAt = $serverAt.AddMinutes(-10)
 
 Write-Host "절전 해제 예정: $wakeAt"
 Write-Host "디스코드 발송 예정: $discordAt"
