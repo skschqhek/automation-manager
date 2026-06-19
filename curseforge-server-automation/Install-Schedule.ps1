@@ -24,7 +24,7 @@ $stopNoticeText = $stopNoticeAt.ToString("HH:mm")
 
 $startAction = New-ScheduledTaskAction `
   -Execute $powershell `
-  -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$scriptRoot\Start-CurseForgeServer.ps1`""
+  -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$scriptRoot\Start-CurseForgeServer.ps1`" -AnnounceStartup"
 
 $stopAction = New-ScheduledTaskAction `
   -Execute $powershell `

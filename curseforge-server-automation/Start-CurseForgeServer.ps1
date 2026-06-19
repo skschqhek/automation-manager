@@ -1,3 +1,7 @@
+param(
+  [switch]$AnnounceStartup
+)
+
 $ErrorActionPreference = "Stop"
 
 Import-Module (Join-Path $PSScriptRoot "AutomationCommon.psm1") -Force
@@ -131,4 +135,9 @@ $process = Start-Process -FilePath "cmd.exe" `
 
 Set-Content -Path $pidPath -Value $process.Id
 Write-AutomationLog -Config $config -Message "서버 시작 요청 완료. PID=$($process.Id)"
-Send-StartupAnnouncement
+if ($AnnounceStartup) {
+  Send-StartupAnnouncement
+}
+else {
+  Write-AutomationLog -Config $config -Message "서버 시작 디스코드 공지 생략: 예약 시작이 아님"
+}

@@ -36,13 +36,19 @@ function Register-OneTimeTask {
     [string]$TaskName,
     [datetime]$At,
     [string]$ScriptPath,
+    [string]$ExtraArguments = "",
     [switch]$WakeToRun
   )
 
   $powershell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
+  $argumentText = "-NoProfile -ExecutionPolicy Bypass -File `"$ScriptPath`""
+  if ($ExtraArguments) {
+    $argumentText = "$argumentText $ExtraArguments"
+  }
+
   $action = New-ScheduledTaskAction `
     -Execute $powershell `
-    -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$ScriptPath`""
+    -Argument $argumentText
 
   $trigger = New-ScheduledTaskTrigger -Once -At $At
 
@@ -141,7 +147,7 @@ Set-Content -Path $wakeScript -Encoding UTF8 -Value "Write-Output 'Wake marker t
 
 Register-OneTimeTask -TaskName $wakeTaskName -At $wakeAt -ScriptPath $wakeScript -WakeToRun
 Register-OneTimeTask -TaskName $discordTaskName -At $discordAt -ScriptPath $discordSendScript
-Register-OneTimeTask -TaskName $serverTaskName -At $serverAt -ScriptPath $minecraftStartScript
+Register-OneTimeTask -TaskName $serverTaskName -At $serverAt -ScriptPath $minecraftStartScript -ExtraArguments "-AnnounceStartup"
 
 Write-Host ""
 Write-Host "예약 등록 완료." -ForegroundColor Green

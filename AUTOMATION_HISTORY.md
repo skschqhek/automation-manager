@@ -14,7 +14,7 @@
 
 ### 마인크래프트 서버 자동화
 
-`curseforge-server-automation` 폴더가 서버 자동 실행과 종료를 담당합니다. `Start-CurseForgeServer.ps1`은 설정된 서버 폴더에서 `run.bat`을 실행하고, 디스코드에 서버가 켜졌다는 공지와 부팅/종료 시각을 보냅니다. `Stop-CurseForgeServer.ps1`은 RCON으로 종료 전 안내 메시지를 보내고, 마지막에 `stop` 명령을 보내 서버를 종료합니다.
+`curseforge-server-automation` 폴더가 서버 자동 실행과 종료를 담당합니다. `Start-CurseForgeServer.ps1`은 설정된 서버 폴더에서 `run.bat`을 실행합니다. 예약 작업으로 서버가 켜진 경우에는 디스코드에 서버가 켜졌다는 공지와 부팅/종료 시각을 보냅니다. `Stop-CurseForgeServer.ps1`은 RCON으로 종료 전 안내 메시지를 보내고, 마지막에 `stop` 명령을 보내 서버를 종료합니다.
 
 서버 종료 전 공지는 `config.json`의 `WarningMinutes`, `WarningMessageTemplate`, `StopNowMessage` 값으로 조정합니다.
 
