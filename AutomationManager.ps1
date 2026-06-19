@@ -188,9 +188,8 @@ $reactionGroup.Controls.Add($reactionStatus)
 $reactionGroup.Controls.Add($reactionDetail)
 $reactionGroup.Controls.Add((New-Button "메시지 올리기" 15 82 105 { Start-PowerShellFile (Join-Path $paths.Reaction "Post-VoteMessage.ps1") }))
 $reactionGroup.Controls.Add((New-Button "메시지 예약" 130 82 105 { Start-PowerShellFile (Join-Path $paths.Reaction "Install-VoteMessageSchedule.ps1") }))
-$reactionGroup.Controls.Add((New-Button "감시 시작" 245 82 105 { Start-PowerShellFile (Join-Path $paths.Reaction "Monitor-DiscordReaction.ps1") }))
-$reactionGroup.Controls.Add((New-Button "설정 검사" 360 82 105 { Start-PowerShellFile (Join-Path $paths.Reaction "Check-Config.ps1") }))
-$reactionGroup.Controls.Add((New-Button "설정 열기" 475 82 105 {
+$reactionGroup.Controls.Add((New-Button "설정 검사" 245 82 105 { Start-PowerShellFile (Join-Path $paths.Reaction "Check-Config.ps1") }))
+$reactionGroup.Controls.Add((New-Button "설정 열기" 360 82 105 {
   $configPath = Join-Path $paths.Reaction "config.json"
   if (-not (Test-Path $configPath)) {
     $example = Join-Path $paths.Reaction "config.example.json"
@@ -198,8 +197,8 @@ $reactionGroup.Controls.Add((New-Button "설정 열기" 475 82 105 {
   }
   Open-File $configPath
 }))
-$reactionGroup.Controls.Add((New-Button "상태 초기화" 590 82 115 { Start-PowerShellFile (Join-Path $paths.Reaction "Reset-TriggeredState.ps1") }))
-$reactionGroup.Controls.Add((New-Button "폴더 열기" 715 82 105 { Open-Path $paths.Reaction }))
+$reactionGroup.Controls.Add((New-Button "상태 초기화" 475 82 115 { Start-PowerShellFile (Join-Path $paths.Reaction "Reset-TriggeredState.ps1") }))
+$reactionGroup.Controls.Add((New-Button "폴더 열기" 600 82 105 { Open-Path $paths.Reaction }))
 
 function Refresh-Status {
   $lines = New-Object System.Collections.Generic.List[string]
