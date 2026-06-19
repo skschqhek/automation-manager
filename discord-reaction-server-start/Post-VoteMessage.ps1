@@ -6,6 +6,7 @@ if (-not (Test-Path $configPath)) {
 }
 
 $config = Get-Content $configPath -Raw -Encoding UTF8 | ConvertFrom-Json
+$monitorScript = Join-Path $PSScriptRoot "Monitor-DiscordReaction.ps1"
 
 function Assert-ConfigValue {
   param([string]$Name, [string]$Value)
@@ -158,6 +159,31 @@ function Remove-PreviousVoteMessage {
   }
 }
 
+function Start-ReactionMonitor {
+  if ($config.PSObject.Properties.Name -contains "AutoStartMonitor" -and $config.AutoStartMonitor -eq $false) {
+    Write-Host "AutoStartMonitor is disabled. Reaction monitor was not started." -ForegroundColor Yellow
+    return
+  }
+
+  if (-not (Test-Path $monitorScript)) {
+    Write-Host "Reaction monitor script was not found: $monitorScript" -ForegroundColor Yellow
+    return
+  }
+
+  $runningMonitor = Get-CimInstance Win32_Process -Filter "Name = 'powershell.exe' OR Name = 'pwsh.exe'" -ErrorAction SilentlyContinue |
+    Where-Object { $_.CommandLine -and $_.CommandLine -match [regex]::Escape($monitorScript) }
+
+  if ($runningMonitor) {
+    Write-Host "Reaction monitor is already running." -ForegroundColor Green
+    return
+  }
+
+  $powershell = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
+  $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$monitorScript`""
+  Start-Process -FilePath $powershell -ArgumentList $arguments -WindowStyle Hidden | Out-Null
+  Write-Host "Reaction monitor started automatically." -ForegroundColor Green
+}
+
 Remove-PreviousVoteMessage
 
 $body = @{
@@ -203,5 +229,7 @@ if ($config.AddInitialReaction -ne $false) {
 }
 Write-Host "State file: $voteStateFile"
 Write-Host "Previous trigger state cleared for the new vote message."
+
+Start-ReactionMonitor
 
 $httpClient.Dispose()

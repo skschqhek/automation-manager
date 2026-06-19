@@ -31,6 +31,7 @@ Webhook만으로는 반응 수를 읽을 수 없습니다. 반응 수 감지는 
   "PollSeconds": 30,
   "PostRetryCount": 5,
   "PostRetryDelaySeconds": 10,
+  "AutoStartMonitor": true,
   "WebhookUrl": "공지용 Webhook URL",
   "StartScript": "{Manager}\\curseforge-server-automation\\Start-CurseForgeServer.ps1",
   "AnnouncementMessage": "반응 수가 기준에 도달해 Sunlit Valley 서버를 시작합니다.",
@@ -55,7 +56,7 @@ powershell -ExecutionPolicy Bypass -File .\Install-VoteMessageSchedule.ps1
 powershell -ExecutionPolicy Bypass -File .\Post-VoteMessage.ps1
 ```
 
-메시지를 올리면 `reaction-vote-message.json`에 그 메시지 ID가 저장됩니다.
+메시지를 올리면 `reaction-vote-message.json`에 그 메시지 ID가 저장되고, `AutoStartMonitor`가 `true`이면 반응 감시도 자동으로 시작됩니다.
 
 `AddInitialReaction`이 `true`이면 봇이 감시용 메시지에 `EmojiName` 이모트를 반응으로 한 번 달아둡니다. 이 반응도 디스코드의 반응 개수에 포함됩니다.
 
@@ -70,6 +71,8 @@ powershell -ExecutionPolicy Bypass -File .\Monitor-DiscordReaction.ps1
 ```
 
 또는 `Start-Monitor.bat`를 더블클릭합니다.
+
+기본 설정에서는 `Post-VoteMessage.ps1`이 투표 메시지를 올린 직후 감시를 자동으로 시작하므로, 보통은 따로 실행하지 않아도 됩니다. 이미 감시가 실행 중이면 중복 실행하지 않습니다.
 
 ## 중복 실행 방지
 
