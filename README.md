@@ -1,12 +1,15 @@
 # 자동화 관리
 
-`automation-manager` 폴더 안에 들어 있는 세 자동화 폴더를 한 화면에서 관리하는 Windows용 PowerShell UI입니다.
+Windows PowerShell automation manager for Minecraft server, Discord notices, wake schedule, and reaction votes.
+
+`automation-manager` 폴더 안에 들어 있는 자동화 폴더를 한 화면에서 관리하는 Windows용 PowerShell UI입니다.
 
 관리 대상:
 
 - `curseforge-server-automation`
 - `13 50 login`
 - `discord scheduled message`
+- `discord-reaction-server-start`
 
 ## 실행
 
@@ -30,7 +33,16 @@
 - `설정 제거`: 13:50 절전 해제 설정 제거
 - `테스트 전송`: 디스코드 메시지 테스트 전송
 - `예약 제거`: 디스코드 예약 제거
+- `메시지 올리기`: 디스코드 이모지 투표 메시지 게시
+- `메시지 예약`: 디스코드 이모지 투표 메시지 예약
+- `감시 시작`: 디스코드 이모지 반응 수 감시 시작
+- `상태 초기화`: 반응 감지 실행 상태 초기화
 - `원버튼 예약+절전`: 가까운 13:50 절전 해제, 13:55 디스코드 발송, 14:00 서버 실행을 예약한 뒤 절전 모드로 전환
 
 13:50 절전 해제 설정 등록/제거는 관리자 권한 승인을 요구할 수 있습니다.
 원버튼 기능도 전원 설정과 절전 전환을 수행하므로 관리자 권한 승인을 요구할 수 있습니다.
+
+## GitHub 게시 주의
+
+실제 `config.json` 파일은 봇 토큰, 웹후크 URL, RCON 비밀번호 같은 개인 설정을 포함할 수 있으므로 저장소에 올리지 않습니다.
+공개 저장소에는 `config.example.json`만 포함합니다.
