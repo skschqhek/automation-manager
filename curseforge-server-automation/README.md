@@ -31,7 +31,7 @@ D:\Minecraft\server-automation
 
 - `{startTime}`: 서버 시작 시각
 - `{stopTime}`: 서버 종료 시각
-- `{operationWindow}`: 서버 운영 시간, 예: `14:00 ~ 다음날 05:00`
+- `{operationWindow}`: 서버 시작 시각과 종료 시각, 예: `14:00 ~ 다음날 05:00`
 
 ## 3. RCON 켜기
 
@@ -86,7 +86,8 @@ PowerShell을 열고 이 폴더로 이동한 뒤 실행합니다.
 
 ```text
 서버가 켜졌습니다.
-운영 시간: {operationWindow}
+부팅 시간: {startTime}
+종료 시간: {stopTime}
 ```
 
 종료 스크립트는 `WarningMinutes`에 적힌 시간에 맞춰 서버 채팅에 공지합니다.
