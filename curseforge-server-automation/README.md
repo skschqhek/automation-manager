@@ -24,6 +24,14 @@ D:\Minecraft\server-automation
 - `StopTime`: 매일 서버를 끌 시간
 - `WarningMinutes`: 종료 몇 분 전에 공지할지
 - `RconPassword`: `server.properties`의 `rcon.password`와 같은 값
+- `DiscordWebhookUrl`: 서버 시작 공지를 보낼 디스코드 Webhook URL
+- `StartupAnnouncementMessage`: 서버 시작 후 디스코드에 보낼 메시지
+
+서버 시작 공지 메시지에는 아래 치환값을 사용할 수 있습니다.
+
+- `{startTime}`: 서버 시작 시각
+- `{stopTime}`: 서버 종료 시각
+- `{operationWindow}`: 서버 운영 시간, 예: `14:00 ~ 다음날 05:00`
 
 ## 3. RCON 켜기
 
@@ -72,6 +80,15 @@ PowerShell을 열고 이 폴더로 이동한 뒤 실행합니다.
 
 ## 6. 동작 방식
 
+시작 스크립트는 서버 실행 명령을 성공적으로 호출한 뒤 디스코드에 시작 공지를 보냅니다.
+
+기본 공지 내용:
+
+```text
+서버가 켜졌습니다.
+운영 시간: {operationWindow}
+```
+
 종료 스크립트는 `WarningMinutes`에 적힌 시간에 맞춰 서버 채팅에 공지합니다.
 
 예를 들어 `StopTime`이 `02:00`, `WarningMinutes`가 `[30, 10, 5, 1]`이면 다음처럼 공지합니다.
@@ -83,4 +100,3 @@ PowerShell을 열고 이 폴더로 이동한 뒤 실행합니다.
 - 02:00: `save-all` 후 `stop`
 
 서버가 정상 종료되지 않으면 `ForceKillAfterSeconds` 이후 마지막 수단으로 서버 프로세스를 종료합니다.
-

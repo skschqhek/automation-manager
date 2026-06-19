@@ -10,11 +10,11 @@
 
 ### 통합 UI
 
-`AutomationManager.bat`를 실행하면 한글 UI가 열립니다. UI에서는 마인크래프트 서버 즉시 실행, 서버 시작/종료 예약, 예약 해제, 13:50 절전 해제 설정, 디스코드 메시지 테스트, 디스코드 반응 투표 메시지 게시, 감시 시작, 설정 파일 열기 등을 수행할 수 있습니다.
+`AutomationManager.bat`를 실행하면 한글 UI가 열립니다. UI에서는 마인크래프트 서버 즉시 실행, 서버 시작/종료 예약, 예약 해제, 13:50 절전 해제 설정, 디스코드 메시지 테스트, 디스코드 반응 투표 메시지 게시, 설정 파일 열기 등을 수행할 수 있습니다.
 
 ### 마인크래프트 서버 자동화
 
-`curseforge-server-automation` 폴더가 서버 자동 실행과 종료를 담당합니다. `Start-CurseForgeServer.ps1`은 설정된 서버 폴더에서 `run.bat`을 실행합니다. `Stop-CurseForgeServer.ps1`은 RCON으로 종료 전 안내 메시지를 보내고, 마지막에 `stop` 명령을 보내 서버를 종료합니다.
+`curseforge-server-automation` 폴더가 서버 자동 실행과 종료를 담당합니다. `Start-CurseForgeServer.ps1`은 설정된 서버 폴더에서 `run.bat`을 실행하고, 디스코드에 서버가 켜졌다는 공지와 운영 시간을 보냅니다. `Stop-CurseForgeServer.ps1`은 RCON으로 종료 전 안내 메시지를 보내고, 마지막에 `stop` 명령을 보내 서버를 종료합니다.
 
 서버 종료 전 공지는 `config.json`의 `WarningMinutes`, `WarningMessageTemplate`, `StopNowMessage` 값으로 조정합니다.
 

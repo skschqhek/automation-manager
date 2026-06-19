@@ -12,5 +12,9 @@
   "StopCommand": "stop",
   "ForceKillAfterSeconds": 120,
   "PidFile": ".curseforge-server.pid",
-  "LogFile": "logs\\automation.log"
+  "LogFile": "logs\\automation.log",
+  "DiscordWebhookUrl": "https://discord.com/api/webhooks/WEBHOOK_ID/WEBHOOK_TOKEN",
+  "StartupAnnouncementEnabled": true,
+  "StartupAnnouncementDelaySeconds": 0,
+  "StartupAnnouncementMessage": "서버가 켜졌습니다.\n운영 시간: {operationWindow}"
 }
