@@ -7,7 +7,7 @@ Windows PowerShell automation manager for Minecraft server, Discord notices, wak
 관리 대상:
 
 - `curseforge-server-automation`
-- `Send-Scheduled-Message`
+- `Wake-up-PC`
 - `discord scheduled message`
 - `discord-reaction-server-start`
 

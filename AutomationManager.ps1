@@ -6,7 +6,7 @@ Add-Type -AssemblyName System.Drawing
 $desktop = [Environment]::GetFolderPath("Desktop")
 $paths = [ordered]@{
   Minecraft = Join-Path $PSScriptRoot "curseforge-server-automation"
-  Wake = Join-Path $PSScriptRoot "Send-Scheduled-Message"
+  Wake = Join-Path $PSScriptRoot "Wake-up-PC"
   Discord = Join-Path $PSScriptRoot "discord scheduled message"
   Reaction = Join-Path $PSScriptRoot "discord-reaction-server-start"
 }
