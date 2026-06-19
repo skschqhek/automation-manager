@@ -21,7 +21,7 @@
 ```json
 {
   "WebhookUrl": "복사한 Webhook URL",
-  "Message": "서버가 곧 열립니다.",
+  "Message": "서버가 {serverStartTime}에 열릴 예정입니다. {noticeMinutes}분 전에 미리 안내드립니다.",
   "NoticeMinutesBeforeStart": 10,
   "TaskName": "Discord Scheduled Message",
   "ServerStartTaskNames": [
@@ -34,6 +34,11 @@
 전송 시각은 이 파일의 `SendTime`이 아니라 `curseforge-server-automation/config.json`의 `StartTime`을 기준으로 계산됩니다.
 
 예: 마인크래프트 `StartTime`이 `14:00`이고 `NoticeMinutesBeforeStart`가 `10`이면 디스코드 예약 메시지는 `13:50`에 등록됩니다.
+
+메시지 안에서는 아래 치환값을 사용할 수 있습니다.
+
+- `{serverStartTime}`: 실제 예약된 서버 시작 시각
+- `{noticeMinutes}`: 서버 시작 몇 분 전에 보내는 공지인지
 
 ## 3. 테스트 전송
 

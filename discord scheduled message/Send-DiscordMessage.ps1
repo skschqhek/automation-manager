@@ -69,8 +69,35 @@ if (-not $matchedTaskInfo -and -not $Force) {
   exit 0
 }
 
+$serverStartTimeText = ""
+$serverStartDateTime = $null
+if ($matchedTaskInfo -and $matchedTaskInfo.NextRunTime) {
+  $serverStartDateTime = $matchedTaskInfo.NextRunTime
+}
+else {
+  $managerDir = Split-Path $PSScriptRoot -Parent
+  $minecraftConfigPath = Join-Path $managerDir "curseforge-server-automation\config.json"
+  if (Test-Path $minecraftConfigPath) {
+    $minecraftConfig = Get-Content $minecraftConfigPath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($minecraftConfig.StartTime) {
+      $parts = ([string]$minecraftConfig.StartTime).Split(":")
+      if ($parts.Count -eq 2) {
+        $serverStartDateTime = (Get-Date).Date.AddHours([int]$parts[0]).AddMinutes([int]$parts[1])
+      }
+    }
+  }
+}
+
+if ($serverStartDateTime) {
+  $serverStartTimeText = $serverStartDateTime.ToString("HH:mm")
+}
+
+$messageText = [string]$config.Message
+$messageText = $messageText.Replace("{serverStartTime}", $serverStartTimeText)
+$messageText = $messageText.Replace("{noticeMinutes}", [string]$noticeMinutesBeforeStart)
+
 $body = @{
-  content = $config.Message
+  content = $messageText
 } | ConvertTo-Json -Depth 5
 
 Add-Type -AssemblyName System.Net.Http
